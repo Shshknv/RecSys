@@ -51,7 +51,7 @@ for i in range(UsersCount):  # преобразуем оценки в тип int
         if Users[i].movies_rates[j].rate != -1:
             summ += Users[i].movies_rates[j].rate
             d = d+1
-    Users[i].avg_rate = round(summ/d, 3)
+    Users[i].avg_rate = summ/d
 
 
 for i in range(UsersCount): # составляем метрику сходства
@@ -68,10 +68,10 @@ for i in range(UsersCount): # составляем метрику сходств
                     s += Users[i].movies_rates[k].rate * Users[j].movies_rates[k].rate
                     sq1 += math.pow(Users[i].movies_rates[k].rate, 2)
                     sq2 += math.pow(Users[j].movies_rates[k].rate, 2)
-            sq1 = round(math.sqrt(sq1),3)
-            sq2 = round(math.sqrt(sq2),3)
-            sq = round(sq1 * sq2)
-            Users[i].sim_users[j].sim = round(s / (sq), 3)
+            sq1 = math.sqrt(sq1)
+            sq2 = math.sqrt(sq2)
+            sq = sq1 * sq2
+            Users[i].sim_users[j].sim = s / (sq)
         else:
             Users[i].sim_users[j].sim = 0
 
@@ -103,11 +103,11 @@ for k in range(FilmsCount): # расчет оценок
        exp_rate.append(Movie())
        exp_rate[counter].id = k + 1
        for n in range (7):
-           summ1 += round(SimUsers[n].sim * (SimUsers[n].movies_rates[k].rate - SimUsers[n].avg_rate),3)
-           summ2 += SimUsers[n].sim
-       summ2 = round(summ2, 3)
-       x = round((summ1/summ2),3)
-       exp_rate[counter].rate = round(Users[userId - 1].avg_rate + x, 3)
+           if(SimUsers[n].movies_rates[k].rate != -1):
+              summ1 += SimUsers[n].sim * (SimUsers[n].movies_rates[k].rate - SimUsers[n].avg_rate)
+              summ2 += SimUsers[n].sim
+       x = (summ1/summ2)
+       exp_rate[counter].rate = round(Users[userId-1].avg_rate + x,3)
 result = []
 place = []
 for i in range(FilmsCount):
